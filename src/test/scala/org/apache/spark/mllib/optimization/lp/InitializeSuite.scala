@@ -31,7 +31,7 @@ import org.apache.spark.mllib.optimization.lp.VectorSpace._
 import org.apache.spark.mllib.optimization.lp.vs.dvector.DVectorSpace
 import org.apache.spark.mllib.optimization.lp.vs.vector.DenseVectorSpace
 import breeze.linalg.{DenseMatrix => BDM, DenseVector => BDV, _}
-import org.apache.spark.mllib.optimization.tfocs.VectorSpace.{DMatrix, DVector}
+//import org.apache.spark.mllib.optimization.tfocs.VectorSpace.{DMatrix, DVector}
 
 class InitializeSuite extends FunSuite with MLlibTestSparkContext {
 
