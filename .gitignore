@@ -7,3 +7,4 @@ project/project/
 .sbtopts
 src/main/main.iml
 src/test/test.iml
+.DS_Store
