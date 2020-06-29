@@ -28,7 +28,7 @@ import breeze.linalg.{DenseMatrix => BDM, DenseVector => BDV}
 import com.github.fommil.netlib.{BLAS => NetlibBLAS}
 import com.github.fommil.netlib.BLAS.{getInstance => NativeBLAS}
 
-import org.apache.spark.Logging
+import org.apache.spark.internal.Logging
 import org.apache.spark.mllib.linalg.{BLAS, Matrices, Matrix}
 import org.apache.spark.mllib.optimization.lp.VectorSpace._
 import com.github.fommil.netlib.LAPACK.{getInstance => lapack}

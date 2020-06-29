@@ -23,7 +23,7 @@ package org.apache.spark.mllib.optimization.lp
 
 import breeze.linalg.{DenseVector => BDV}
 
-import org.apache.spark.Logging
+import org.apache.spark.internal.Logging
 import org.apache.spark.mllib.linalg.{DenseVector, Matrix}
 import org.apache.spark.mllib.optimization.lp.VectorSpace._
 import org.apache.spark.mllib.optimization.lp.fs.dvector.vector.LinopMatrixAdjoint
