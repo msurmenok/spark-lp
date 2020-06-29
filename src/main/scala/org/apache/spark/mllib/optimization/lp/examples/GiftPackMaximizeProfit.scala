@@ -15,6 +15,7 @@ object GiftPackMaximizeProfit {
       which must weigh 5 kg. At least 2 kg of A and not more than 4 kg of B should be used.
       The net profit contribution to the company is Rs. 5 per kg for A and Rs. 6 per kg for B.
       Formulate LP Model to find the optimal factor mix.
+      Example from: https://www.mygreatlearning.com/blog/introduction-to-linear-programming-for-data-science/
 
       The correct answer: A = 2, B = 3, cost = 28
       """
