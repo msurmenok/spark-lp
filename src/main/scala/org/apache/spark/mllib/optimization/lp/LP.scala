@@ -22,7 +22,8 @@
 package org.apache.spark.mllib.optimization.lp
 
 import breeze.linalg.{DenseVector => BDV}
-import org.apache.spark.{Logging, SparkContext}
+import org.apache.spark.internal.Logging
+import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.{DenseVector, Vector}
 import org.apache.spark.mllib.linalg.CholeskyDecomposition
 import org.apache.spark.mllib.optimization.lp.fs.dvector.vector.LinopMatrixAdjoint
@@ -241,7 +242,7 @@ object LP extends Logging {
       //x.checkpoint()
       x.localCheckpoint()
       // lambda = lambda + alphaDualIter * dLambda
-      lambda = new DenseVector((lambdaBroadcast.value.toBreeze + alphaDualIter * dLambda.toBreeze).toArray)
+      lambda = new DenseVector((lambdaBroadcast.value.asBreeze + alphaDualIter * dLambda.asBreeze).toArray)
       lambdaBroadcast = sc.broadcast(lambda)
       // s = s + alphaDualIter * ds
       s = row.combine(1.0, s, alphaDualIter, ds)
