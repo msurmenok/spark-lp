@@ -2,9 +2,9 @@ name := "spark-lp"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.12"
 
-sparkVersion := "1.6.2"
+sparkVersion := "2.4.4"
 
 sparkComponents += "mllib"
 
@@ -14,6 +14,13 @@ libraryDependencies ++= Seq(
   "com.joptimizer" % "joptimizer" % "3.4.0",
   "org.scalatest" %% "scalatest" % "2.1.5" % Test
 )
+
+// https://mvnrepository.com/artifact/org.apache.spark/spark-core
+libraryDependencies += "org.apache.spark" %% "spark-core" % "2.4.4"
+
+// https://mvnrepository.com/artifact/org.apache.spark/spark-mllib
+libraryDependencies += "org.apache.spark" %% "spark-mllib" % "2.4.4" % "runtime"
+
 
 parallelExecution in Test := false
 
