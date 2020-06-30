@@ -21,7 +21,7 @@
 
 package org.apache.spark.mllib.optimization.lp
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.{DenseVector, Vector, Vectors}
@@ -31,7 +31,7 @@ import org.apache.spark.mllib.optimization.lp.VectorSpace._
 import org.apache.spark.mllib.optimization.lp.vs.dvector.DVectorSpace
 import org.apache.spark.mllib.optimization.lp.vs.vector.DenseVectorSpace
 
-class LPSuite extends FunSuite with MLlibTestSparkContext {
+class LPSuite extends AnyFunSuite with MLlibTestSparkContext {
 
   val numPartitions = 2
   val cArray = Array(2.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0)

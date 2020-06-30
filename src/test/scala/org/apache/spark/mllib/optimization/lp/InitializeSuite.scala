@@ -21,7 +21,8 @@
 
 package org.apache.spark.mllib.optimization.lp
 
-import org.scalatest.FunSuite
+//import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.{DenseVector, Vector, Vectors}
@@ -33,7 +34,7 @@ import org.apache.spark.mllib.optimization.lp.vs.vector.DenseVectorSpace
 import breeze.linalg.{DenseMatrix => BDM, DenseVector => BDV, _}
 //import org.apache.spark.mllib.optimization.tfocs.VectorSpace.{DMatrix, DVector}
 
-class InitializeSuite extends FunSuite with MLlibTestSparkContext {
+class InitializeSuite extends AnyFunSuite with MLlibTestSparkContext {
 
   val numPartitions = 2
   val cArray = Array(2.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0)
