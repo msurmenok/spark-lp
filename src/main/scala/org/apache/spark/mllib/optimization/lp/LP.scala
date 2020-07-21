@@ -16,8 +16,8 @@
  */
 
 /**
-  * @author Ehsan Mohyedin Kermani: ehsanmo1367@gmail.com
-  */
+ * @author Ehsan Mohyedin Kermani: ehsanmo1367@gmail.com
+ */
 
 package org.apache.spark.mllib.optimization.lp
 
@@ -33,12 +33,12 @@ import org.apache.spark.mllib.optimization.lp.VectorSpace._
 import org.apache.spark.mllib.optimization.lp.fs.dvector.dmatrix.SpLinopMatrix
 
 /**
-  * An abstract class for solving LP.
-  *
-  * @param c the objective coefficient DVector.
-  * @param rows the constraint DMatrix.
-  * @param b the constraint values.
-  */
+ * An abstract class for solving LP.
+ *
+ * @param c    the objective coefficient DVector.
+ * @param rows the constraint DMatrix.
+ * @param b    the constraint values.
+ */
 abstract class LP(val c: DVector, val rows: DMatrix, val b: DenseVector) extends Serializable {
 
   def solve(c: DVector,
@@ -52,29 +52,30 @@ abstract class LP(val c: DVector, val rows: DMatrix, val b: DenseVector) extends
 object LP extends Logging {
 
   /**
-    * Compute the optimal value and the corresponding vector for LP problem.
-    *
-    * minimize c^Tx
-    * subject to Ax=b and x >= 0
-    *
-    * @param c the objective coefficient DVector.
-    * @param rows the constraint DMatrix.
-    * @param b the constraint values.
-    * @param tol convergence tolerance.
-    * @param maxIter maximum number of iterations if it did not converge.
-    * @param sc a SparkContext instance.
-    * @param row implicit for distributed computations.
-    * @param col implicit for local computations.
-    * @return optimal value and the corresponding solution vector.
-    */
+   * Compute the optimal value and the corresponding vector for LP problem.
+   *
+   * minimize c^Tx
+   * subject to Ax=b and x >= 0
+   *
+   *
+   * @param c       the objective coefficient DVector.
+   * @param rows    the constraint DMatrix.
+   * @param b       the constraint values.
+   * @param tol     convergence tolerance.
+   * @param maxIter maximum number of iterations if it did not converge.
+   * @param sc      a SparkContext instance.
+   * @param row     implicit for distributed computations.
+   * @param col     implicit for local computations.
+   * @return optimal value and the corresponding solution vector.
+   */
   def solve(c: DVector,
             rows: DMatrix,
             b: DenseVector,
             tol: Double = 1e-8,
             maxIter: Int = 50,
             @transient sc: SparkContext)(
-    implicit row: VectorSpace[DVector],
-    col: VectorSpace[DenseVector]): (Double, DVector) = {
+             implicit row: VectorSpace[DVector],
+             col: VectorSpace[DenseVector]): (Double, DVector) = {
 
     // cache distributed vector in memory
     row.cache(c)
@@ -134,21 +135,37 @@ object LP extends Logging {
 
       println(s"iteration $iter")
       // B^T * x - b
-      var rb: DenseVector = col.combine(1.0, dmatT(x), -1.0,  b)
+      var rb: DenseVector = col.combine(1.0, dmatT(x), -1.0, b)
       var rc: DVector = row.combine(1.0, dmat(lambdaBroadcast.value), 1.0, s.diff(c))
       row.cache(rc)
-      //rc.localCheckpoint()
+      // rc.localCheckpoint()
       // D = X^(1/2) * S^(-1/2)
+
+      // remove
+      val debugStr = x.collect()
+      val debugStr2 = s.collect()
+
       val D: DVector = row.entrywiseProd(
         x.mapElements {
           case a if math.abs(a) < eps => math.signum(a) * capSqrd
           case a if a >= 0.0 => math.sqrt(a)
         },
         s.mapElements {
-          case a if 0 < a && a < eps => capSqrd
-          case a if a >= eps => 1 / math.sqrt(a)
+          case a if math.abs(a) < eps => capSqrd
+          case a if math.abs(a) >= eps => 1 / math.sqrt(math.abs(a))
         }
       )
+
+      //      val D: DVector = row.entrywiseProd(
+      //        x.mapElements {
+      //          case a if math.abs(a) < eps => math.signum(a) * capSqrd
+      //          case a if a >= 0.0 => math.sqrt(a)
+      //        },
+      //        s.mapElements {
+      //          case a if 0 < a && a < eps => capSqrd
+      //          case a if a >= eps => 1 / math.sqrt(a)
+      //        }
+      //      )
 
       val D2: DVector = row.entrywiseProd(
         x,
@@ -161,10 +178,10 @@ object LP extends Logging {
       //D2.localCheckpoint()
       // solve (14.30) for (dxAff, dLambdaAff, dsAff)
       // 1) solve for BTD2B dLambdaAff = -rb + BT * (-D^2 * rc + x)
-      val DB: DMatrix = (new SpLinopMatrix(D))(rows)
+      val DB: DMatrix = (new SpLinopMatrix(D)) (rows)
       val DBRowMat: LPRowMatrix = new LPRowMatrix(DB, n, m)
       // compute Gramian matrix B^TB
-      val BTD2B: BDV[Double] = DBRowMat.computeGramianMatrixColumn(m, depth=2)
+      val BTD2B: BDV[Double] = DBRowMat.computeGramianMatrixColumn(m, depth = 2)
       val BTD2rcx = dmatT(x.diff(row.entrywiseProd(D2, rc)))
       val dLambdaAffRightSide: Vector = col.combine(1.0, BTD2rcx, -1.0, rb)
       val upTriArray: Array[Double] = BTD2B.data
@@ -190,10 +207,10 @@ object LP extends Logging {
       // Solve (14.35) for (dx, dLambda, ds)
       // 1) BTD2B dLambda = -rb + BT * D2 *(-rc + s + X^(-1) dXAff dSAff e - sigma mu X^(-1)e)
       val xinv: DVector = x.mapElements {
-          case a if 0 < math.abs(a) && math.abs(a) < eps => math.signum(a) * cap
-          case a if a >= eps => math.pow(a, -1)
-          case _ => throw new IllegalArgumentException("Found zero element in X")
-        }
+        case a if 0 < math.abs(a) && math.abs(a) < eps => math.signum(a) * cap
+        case a if a >= eps => math.pow(a, -1)
+        case _ => throw new IllegalArgumentException("Found zero element in X")
+      }
       val xinvdXAffdsAff: DVector = row.entrywiseProd(xinv, row.entrywiseProd(dxAff, dsAff))
       val dLambdaRightSide: DenseVector = col.combine(
         -1.0,
@@ -248,7 +265,7 @@ object LP extends Logging {
       s = row.combine(1.0, s, alphaDualIter, ds)
       //s.checkpoint()
       s.localCheckpoint()
-      rb = col.combine(1.0, dmatT(x), -1.0,  b)
+      rb = col.combine(1.0, dmatT(x), -1.0, b)
       rc = row.combine(1.0, dmat(lambdaBroadcast.value), 1.0, s.diff(c))
       cTx = c.dot(x)
       val bTlambda = col.dot(b, lambdaBroadcast.value)
