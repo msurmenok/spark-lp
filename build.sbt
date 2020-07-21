@@ -4,8 +4,8 @@ scalaVersion := "2.11.12"
 val sparkVersion = "2.4.4"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-core" % sparkVersion,
+  "org.apache.spark" %% "spark-mllib" % sparkVersion,
 
   "com.joptimizer" % "joptimizer" % "3.4.0",
   "org.scalatest" %% "scalatest-funsuite" % "3.2.0" % Test
